@@ -5,162 +5,377 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NotiFyah - Real-time Notification System</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             color: #333;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
+            padding: 20px;
         }
+
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
             text-align: center;
+            margin-bottom: 40px;
+            color: white;
         }
+
         .header h1 {
-            margin: 0;
-            font-size: 2.5em;
-            font-weight: 300;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
+
         .header p {
-            margin: 10px 0 0 0;
-            font-size: 1.2em;
+            font-size: 1.2rem;
             opacity: 0.9;
         }
-        .content {
-            padding: 40px;
-        }
-        .features {
+
+        .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
-            margin: 40px 0;
+            margin-bottom: 50px;
         }
-        .feature {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-        }
-        .feature h3 {
-            color: #667eea;
-            margin-top: 0;
-        }
-        .cta-section {
-            text-align: center;
-            margin: 40px 0;
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
             padding: 30px;
-            background: #f8f9fa;
-            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
         }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .tech-stack {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .tech-stack h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 2rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .tech-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .tech-item h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .tech-item p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .clients-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .clients-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 2rem;
+        }
+
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        .client-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .client-card:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+            transform: translateY(-3px);
+        }
+
+        .client-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .client-card p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
         .btn {
             display: inline-block;
-            padding: 15px 30px;
+            padding: 12px 30px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             text-decoration: none;
             border-radius: 25px;
-            font-size: 1.1em;
-            font-weight: 500;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin: 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
         }
+
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        .tech-stack {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin: 20px 0;
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
-        .tech-tag {
-            background: #e9ecef;
-            color: #495057;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: 500;
+
+        .quick-start {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-        .footer {
-            background: #343a40;
-            color: white;
+
+        .quick-start h2 {
             text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 2rem;
+        }
+
+        .step {
+            background: #f8f9fa;
             padding: 20px;
-            font-size: 0.9em;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .step p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 30px 0;
+            opacity: 0.8;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .clients-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <div class="header">
-            <h1>🚀 NotiFyah</h1>
-            <p>Real-time Notification System with Kafka, WebSocket & PostgreSQL</p>
+            <h1>🔔 NotiFyah</h1>
+            <p>Real-time Notification System with Spring Boot, Kafka & WebSocket</p>
         </div>
-        
-        <div class="content">
-            <h2>Welcome to NotiFyah!</h2>
-            <p>NotiFyah is a modern, scalable real-time notification system built with Spring Boot 3.2, featuring Apache Kafka for message streaming, WebSocket for real-time delivery, and PostgreSQL for persistence.</p>
-            
-            <div class="features">
-                <div class="feature">
-                    <h3>🔔 Real-time Notifications</h3>
-                    <p>Instant notification delivery using WebSocket technology. Users receive notifications in real-time without page refresh.</p>
-                </div>
-                <div class="feature">
-                    <h3>📨 Kafka Integration</h3>
-                    <p>Apache Kafka handles high-throughput message streaming with fault tolerance and horizontal scalability.</p>
-                </div>
-                <div class="feature">
-                    <h3>🔐 JWT Authentication</h3>
-                    <p>Secure authentication using JSON Web Tokens with stateless session management.</p>
-                </div>
-                <div class="feature">
-                    <h3>🗄️ PostgreSQL</h3>
-                    <p>Reliable data persistence with ACID compliance and advanced querying capabilities.</p>
-                </div>
+
+        <!-- Features -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Real-time Delivery</h3>
+                <p>Instant notification delivery using WebSocket technology for seamless user experience</p>
             </div>
-            
-            <div class="tech-stack">
-                <span class="tech-tag">Spring Boot 3.2</span>
-                <span class="tech-tag">Apache Kafka</span>
-                <span class="tech-tag">WebSocket</span>
-                <span class="tech-tag">PostgreSQL</span>
-                <span class="tech-tag">JWT</span>
-                <span class="tech-tag">Docker</span>
-                <span class="tech-tag">Gradle</span>
+            <div class="feature-card">
+                <div class="feature-icon">🔐</div>
+                <h3>Secure Authentication</h3>
+                <p>JWT-based authentication system with role-based access control</p>
             </div>
-            
-            <div class="cta-section">
-                <h3>Ready to test NotiFyah?</h3>
-                <p>Experience the real-time notification system in action!</p>
-                <a href="/notification-client.html" class="btn">🚀 Launch Notification Client</a>
-                <a href="/swagger-ui.html" class="btn">📚 API Documentation</a>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Event-Driven Architecture</h3>
+                <p>Apache Kafka integration for scalable and reliable message processing</p>
             </div>
-            
-            <h3>Quick Start</h3>
-            <ol>
-                <li><strong>Clone the repository:</strong> <code>git clone https://github.com/yourusername/notifyah.git</code></li>
-                <li><strong>Start services:</strong> <code>docker compose up -d</code></li>
-                <li><strong>Run the application:</strong> <code>./gradlew bootRun</code></li>
-                <li><strong>Access the client:</strong> Open <a href="/notification-client.html">http://localhost:8080/notification-client.html</a></li>
-                <li><strong>View API docs:</strong> Open <a href="/swagger-ui.html">http://localhost:8080/swagger-ui.html</a></li>
-            </ol>
+            <div class="feature-card">
+                <div class="feature-icon">💾</div>
+                <h3>Persistent Storage</h3>
+                <p>PostgreSQL database with JPA for reliable data persistence</p>
+            </div>
         </div>
-        
+
+        <!-- Technology Stack -->
+        <div class="tech-stack">
+            <h2>🛠️ Technology Stack</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <h4>Spring Boot 3.2</h4>
+                    <p>Modern Java framework for building production-ready applications</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Apache Kafka</h4>
+                    <p>Distributed streaming platform for real-time data processing</p>
+                </div>
+                <div class="tech-item">
+                    <h4>WebSocket</h4>
+                    <p>Full-duplex communication protocol for real-time updates</p>
+                </div>
+                <div class="tech-item">
+                    <h4>PostgreSQL</h4>
+                    <p>Advanced open-source relational database</p>
+                </div>
+                <div class="tech-item">
+                    <h4>JWT</h4>
+                    <p>JSON Web Tokens for secure authentication</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Docker</h4>
+                    <p>Containerization for easy deployment and scaling</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Clients -->
+        <div class="clients-section">
+            <h2>🧪 Test Applications</h2>
+            <div class="clients-grid">
+                <div class="client-card">
+                    <h3>📱 Simple Client</h3>
+                    <p>Basic notification client for testing core functionality. Includes user authentication, WebSocket connection, and basic notification management.</p>
+                    <a href="/notification-client.html" class="btn">Open Simple Client</a>
+                </div>
+                <div class="client-card">
+                    <h3>🚀 Advanced Client</h3>
+                    <p>Full-featured notification system with advanced features like sending notifications to other users, statistics, and comprehensive logging.</p>
+                    <a href="/notification-client-advanced.html" class="btn btn-secondary">Open Advanced Client</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Start -->
+        <div class="quick-start">
+            <h2>🚀 Quick Start Guide</h2>
+            <div class="step">
+                <h4>1. Start Services</h4>
+                <p>Start PostgreSQL, Kafka, and the application using Docker Compose:</p>
+                <div class="code-block">docker-compose up -d</div>
+            </div>
+            <div class="step">
+                <h4>2. Run Application</h4>
+                <p>Start the Spring Boot application:</p>
+                <div class="code-block">./gradlew bootRun</div>
+            </div>
+            <div class="step">
+                <h4>3. Test the System</h4>
+                <p>Open one of the test clients above to start testing the notification system. You can create users, send notifications, and experience real-time delivery.</p>
+            </div>
+            <div class="step">
+                <h4>4. API Documentation</h4>
+                <p>Access the complete API documentation and test endpoints:</p>
+                <a href="/swagger-ui/index.html" class="btn" target="_blank">Open Swagger UI</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
         <div class="footer">
-            <p>&copy; 2025 NotiFyah. Built with ❤️ for the developer community.</p>
+            <p>Built with ❤️ using Spring Boot, Kafka, and WebSocket</p>
+            <p>View source code on <a href="https://github.com/leegyotaek/notifyah" target="_blank">GitHub</a></p>
         </div>
     </div>
 </body>
