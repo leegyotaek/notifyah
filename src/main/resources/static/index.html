@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NotiFyah - Real-time Notification System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        .feature {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .feature h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        .cta-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 10px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .tech-tag {
+            background: #e9ecef;
+            color: #495057;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        .footer {
+            background: #343a40;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 NotiFyah</h1>
+            <p>Real-time Notification System with Kafka, WebSocket & PostgreSQL</p>
+        </div>
+        
+        <div class="content">
+            <h2>Welcome to NotiFyah!</h2>
+            <p>NotiFyah is a modern, scalable real-time notification system built with Spring Boot 3.2, featuring Apache Kafka for message streaming, WebSocket for real-time delivery, and PostgreSQL for persistence.</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <h3>🔔 Real-time Notifications</h3>
+                    <p>Instant notification delivery using WebSocket technology. Users receive notifications in real-time without page refresh.</p>
+                </div>
+                <div class="feature">
+                    <h3>📨 Kafka Integration</h3>
+                    <p>Apache Kafka handles high-throughput message streaming with fault tolerance and horizontal scalability.</p>
+                </div>
+                <div class="feature">
+                    <h3>🔐 JWT Authentication</h3>
+                    <p>Secure authentication using JSON Web Tokens with stateless session management.</p>
+                </div>
+                <div class="feature">
+                    <h3>🗄️ PostgreSQL</h3>
+                    <p>Reliable data persistence with ACID compliance and advanced querying capabilities.</p>
+                </div>
+            </div>
+            
+            <div class="tech-stack">
+                <span class="tech-tag">Spring Boot 3.2</span>
+                <span class="tech-tag">Apache Kafka</span>
+                <span class="tech-tag">WebSocket</span>
+                <span class="tech-tag">PostgreSQL</span>
+                <span class="tech-tag">JWT</span>
+                <span class="tech-tag">Docker</span>
+                <span class="tech-tag">Gradle</span>
+            </div>
+            
+            <div class="cta-section">
+                <h3>Ready to test NotiFyah?</h3>
+                <p>Experience the real-time notification system in action!</p>
+                <a href="/notification-client.html" class="btn">🚀 Launch Notification Client</a>
+                <a href="/swagger-ui.html" class="btn">📚 API Documentation</a>
+            </div>
+            
+            <h3>Quick Start</h3>
+            <ol>
+                <li><strong>Clone the repository:</strong> <code>git clone https://github.com/yourusername/notifyah.git</code></li>
+                <li><strong>Start services:</strong> <code>docker compose up -d</code></li>
+                <li><strong>Run the application:</strong> <code>./gradlew bootRun</code></li>
+                <li><strong>Access the client:</strong> Open <a href="/notification-client.html">http://localhost:8080/notification-client.html</a></li>
+                <li><strong>View API docs:</strong> Open <a href="/swagger-ui.html">http://localhost:8080/swagger-ui.html</a></li>
+            </ol>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; 2025 NotiFyah. Built with ❤️ for the developer community.</p>
+        </div>
+    </div>
+</body>
+</html>

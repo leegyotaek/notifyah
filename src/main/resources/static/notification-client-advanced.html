@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NotiFyah - 실시간 상호 알림 시스템</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .auth-section {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, button, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .status.connected {
+            background: #c8e6c9;
+            color: #2e7d32;
+            border: 1px solid #4caf50;
+        }
+        .status.disconnected {
+            background: #ffcdd2;
+            color: #c62828;
+            border: 1px solid #f44336;
+        }
+        .notifications {
+            margin-top: 20px;
+        }
+        .notification-item {
+            background: #fff3e0;
+            border: 1px solid #ff9800;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .notification-item.read {
+            background: #f5f5f5;
+            border-color: #ddd;
+            opacity: 0.7;
+        }
+        .notification-type {
+            display: inline-block;
+            background: #ff9800;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .notification-content {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .notification-time {
+            font-size: 12px;
+            color: #666;
+        }
+        .notification-actions {
+            margin-top: 10px;
+        }
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            margin-right: 5px;
+            width: auto;
+        }
+        .btn-success {
+            background: #4caf50;
+        }
+        .btn-danger {
+            background: #f44336;
+        }
+        .btn-warning {
+            background: #ff9800;
+        }
+        .connection-info {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .connection-info h3 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+        .send-notification {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ffc107;
+        }
+        .send-notification h3 {
+            margin-top: 0;
+            color: #f57c00;
+        }
+        .send-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 15px;
+            align-items: end;
+        }
+        .send-form .form-group:last-child {
+            grid-column: 1 / -1;
+        }
+        .log-section {
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            font-family: monospace;
+            font-size: 12px;
+            margin-bottom: 5px;
+            padding: 2px 0;
+        }
+        .log-entry.info { color: #2196F3; }
+        .log-entry.success { color: #4caf50; }
+        .log-entry.warning { color: #ff9800; }
+        .log-entry.error { color: #f44336; }
+        .stats-section {
+            background: #f3e5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #9c27b0;
+        }
+        .stats-section h3 {
+            margin-top: 0;
+            color: #7b1fa2;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #e1bee7;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #9c27b0;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔔 NotiFyah - 실시간 상호 알림 시스템</h1>
+        
+        <!-- 인증 섹션 -->
+        <div class="auth-section">
+            <h3>🔐 인증</h3>
+            <div class="form-group">
+                <label for="username">사용자명 또는 이메일:</label>
+                <input type="text" id="username" placeholder="john_doe" value="john_doe">
+            </div>
+            <div class="form-group">
+                <label for="password">비밀번호:</label>
+                <input type="password" id="password" placeholder="password123" value="password123">
+            </div>
+            <button onclick="login()">로그인</button>
+            <button onclick="signup()" style="background: #4caf50;">회원가입</button>
+        </div>
+
+        <!-- 연결 상태 -->
+        <div class="connection-info">
+            <h3>📡 연결 상태</h3>
+            <div id="connectionStatus" class="status disconnected">연결 안됨</div>
+            <div id="userInfo">사용자 정보가 없습니다.</div>
+        </div>
+
+        <!-- WebSocket 연결 -->
+        <div class="form-group">
+            <button id="connectBtn" onclick="connectWebSocket()" disabled>WebSocket 연결</button>
+            <button id="disconnectBtn" onclick="disconnectWebSocket()" disabled>연결 해제</button>
+        </div>
+
+        <!-- 통계 섹션 -->
+        <div class="stats-section">
+            <h3>📊 알림 통계</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalNotifications">0</div>
+                    <div class="stat-label">전체 알림</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="unreadNotifications">0</div>
+                    <div class="stat-label">읽지 않은 알림</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="sentNotifications">0</div>
+                    <div class="stat-label">보낸 알림</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 알림 전송 섹션 -->
+        <div class="send-notification">
+            <h3>📤 알림 전송하기</h3>
+            <div class="send-form">
+                <div class="form-group">
+                    <label for="targetUserId">받는 사용자 ID:</label>
+                    <input type="number" id="targetUserId" placeholder="2" value="2">
+                </div>
+                <div class="form-group">
+                    <label for="eventType">알림 타입:</label>
+                    <select id="eventType">
+                        <option value="NEW_COMMENT">새 댓글</option>
+                        <option value="NEW_FOLLOW">새 팔로워</option>
+                        <option value="POST_LIKED">좋아요</option>
+                        <option value="SYSTEM">시스템</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="entityId">엔티티 ID:</label>
+                    <input type="number" id="entityId" placeholder="123" value="123">
+                </div>
+                <div class="form-group">
+                    <label for="redirectUrl">리다이렉트 URL:</label>
+                    <input type="text" id="redirectUrl" placeholder="/posts/123" value="/posts/123">
+                </div>
+                <div class="form-group">
+                    <label for="notificationContent">알림 내용:</label>
+                    <input type="text" id="notificationContent" placeholder="안녕하세요! 새로운 알림입니다." value="안녕하세요! 새로운 알림입니다.">
+                </div>
+            </div>
+            <button onclick="sendNotification()" class="btn-warning">📤 알림 전송</button>
+        </div>
+
+        <!-- 메인 그리드 -->
+        <div class="main-grid">
+            <!-- 왼쪽: 알림 목록 -->
+            <div class="notifications">
+                <h3>📋 내 알림 목록</h3>
+                <button onclick="loadNotifications()" class="btn-small">새로고침</button>
+                <button onclick="markAllAsRead()" class="btn-small btn-success">모두 읽음 처리</button>
+                <div id="notificationsList"></div>
+            </div>
+
+            <!-- 오른쪽: 빠른 전송 -->
+            <div class="notifications">
+                <h3>⚡ 빠른 알림 전송</h3>
+                <div class="form-group">
+                    <label for="quickTargetUserId">받는 사용자 ID:</label>
+                    <input type="number" id="quickTargetUserId" placeholder="2" value="2">
+                </div>
+                <button onclick="sendQuickNotification('NEW_COMMENT', '새로운 댓글이 달렸습니다!')" class="btn-small btn-success">💬 댓글 알림</button>
+                <button onclick="sendQuickNotification('NEW_FOLLOW', '새로운 팔로워가 생겼습니다!')" class="btn-small btn-warning">👥 팔로워 알림</button>
+                <button onclick="sendQuickNotification('POST_LIKED', '포스트에 좋아요가 눌렸습니다!')" class="btn-small btn-danger">❤️ 좋아요 알림</button>
+                <button onclick="sendQuickNotification('SYSTEM', '시스템 알림입니다!')" class="btn-small">🔔 시스템 알림</button>
+            </div>
+        </div>
+
+        <!-- 로그 -->
+        <div class="log-section">
+            <h4>📝 시스템 로그</h4>
+            <div id="logContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        let authToken = null;
+        let currentUser = null;
+        let sentCount = 0;
+
+        // 로그 함수
+        function log(message, type = 'info') {
+            const logContainer = document.getElementById('logContainer');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${type}`;
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // 로그인 함수
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                alert('사용자명과 비밀번호를 입력해주세요.');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8080/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        usernameOrEmail: username,
+                        password: password
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    authToken = data.token;
+                    currentUser = data;
+                    
+                    document.getElementById('userInfo').innerHTML = `
+                        <strong>사용자:</strong> ${data.username} (${data.fullName})<br>
+                        <strong>이메일:</strong> ${data.email}<br>
+                        <strong>권한:</strong> ${data.roles.join(', ')}<br>
+                        <strong>사용자 ID:</strong> ${data.userId}
+                    `;
+                    
+                    document.getElementById('connectBtn').disabled = false;
+                    log('로그인 성공!', 'success');
+                    loadNotifications();
+                } else {
+                    const error = await response.text();
+                    log(`로그인 실패: ${error}`, 'error');
+                    alert('로그인에 실패했습니다.');
+                }
+            } catch (error) {
+                log(`로그인 오류: ${error.message}`, 'error');
+                alert('로그인 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 회원가입 함수
+        async function signup() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                alert('사용자명과 비밀번호를 입력해주세요.');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8080/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        email: `${username}@example.com`,
+                        password: password,
+                        fullName: username
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    log('회원가입 성공! 자동으로 로그인됩니다.', 'success');
+                    authToken = data.token;
+                    currentUser = data;
+                    
+                    document.getElementById('userInfo').innerHTML = `
+                        <strong>사용자:</strong> ${data.username} (${data.fullName})<br>
+                        <strong>이메일:</strong> ${data.email}<br>
+                        <strong>권한:</strong> ${data.roles.join(', ')}<br>
+                        <strong>사용자 ID:</strong> ${data.userId}
+                    `;
+                    
+                    document.getElementById('connectBtn').disabled = false;
+                    loadNotifications();
+                } else {
+                    const error = await response.text();
+                    log(`회원가입 실패: ${error}`, 'error');
+                    alert('회원가입에 실패했습니다.');
+                }
+            } catch (error) {
+                log(`회원가입 오류: ${error.message}`, 'error');
+                alert('회원가입 중 오류가 발생했습니다.');
+            }
+        }
+
+        // WebSocket 연결
+        function connectWebSocket() {
+            if (!authToken) {
+                log('인증 토큰이 없습니다. 먼저 로그인해주세요.', 'warning');
+                return;
+            }
+
+            try {
+                ws = new WebSocket(`ws://localhost:8080/ws/notifications?token=${authToken}`);
+
+                ws.onopen = function(event) {
+                    log('WebSocket 연결 성공!', 'success');
+                    document.getElementById('connectionStatus').className = 'status connected';
+                    document.getElementById('connectionStatus').textContent = '연결됨';
+                    document.getElementById('connectBtn').disabled = true;
+                    document.getElementById('disconnectBtn').disabled = false;
+                };
+
+                ws.onmessage = function(event) {
+                    try {
+                        const notification = JSON.parse(event.data);
+                        log(`실시간 알림 수신: ${notification.content}`, 'success');
+                        addNotificationToList(notification);
+                        showNotificationToast(notification);
+                        updateStats();
+                    } catch (error) {
+                        log(`메시지 파싱 오류: ${error.message}`, 'error');
+                    }
+                };
+
+                ws.onclose = function(event) {
+                    log('WebSocket 연결이 종료되었습니다.', 'warning');
+                    document.getElementById('connectionStatus').className = 'status disconnected';
+                    document.getElementById('connectionStatus').textContent = '연결 안됨';
+                    document.getElementById('connectBtn').disabled = false;
+                    document.getElementById('disconnectBtn').disabled = true;
+                };
+
+                ws.onerror = function(error) {
+                    log(`WebSocket 오류: ${error}`, 'error');
+                };
+
+            } catch (error) {
+                log(`WebSocket 연결 오류: ${error.message}`, 'error');
+            }
+        }
+
+        // WebSocket 연결 해제
+        function disconnectWebSocket() {
+            if (ws) {
+                ws.close();
+                ws = null;
+            }
+        }
+
+        // 알림 전송 함수
+        async function sendNotification() {
+            if (!authToken) {
+                log('인증 토큰이 없습니다.', 'warning');
+                return;
+            }
+
+            const targetUserId = document.getElementById('targetUserId').value;
+            const eventType = document.getElementById('eventType').value;
+            const entityId = document.getElementById('entityId').value;
+            const redirectUrl = document.getElementById('redirectUrl').value;
+            const content = document.getElementById('notificationContent').value;
+
+            if (!targetUserId || !content) {
+                alert('받는 사용자 ID와 알림 내용을 입력해주세요.');
+                return;
+            }
+
+            try {
+                const notificationData = {
+                    eventType: eventType,
+                    senderId: currentUser.id,
+                    targetUserId: parseInt(targetUserId),
+                    entityId: parseInt(entityId),
+                    content: content,
+                    redirectUrl: redirectUrl
+                };
+
+                // 실제 API 호출로 알림 전송
+                const response = await fetch('http://localhost:8080/api/notifications/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(notificationData)
+                });
+
+                if (response.ok) {
+                    log(`알림 전송 성공: ${content} → 사용자 ${targetUserId}`, 'success');
+                    
+                    // 보낸 알림 카운트 증가
+                    sentCount++;
+                    updateStats();
+                    
+                    // 입력 필드 초기화
+                    document.getElementById('notificationContent').value = '';
+                    
+                } else {
+                    const error = await response.text();
+                    log(`알림 전송 실패: ${error}`, 'error');
+                }
+                
+            } catch (error) {
+                log(`알림 전송 오류: ${error.message}`, 'error');
+            }
+        }
+
+        // 빠른 알림 전송 함수
+        async function sendQuickNotification(eventType, content) {
+            const targetUserId = document.getElementById('quickTargetUserId').value;
+            if (!targetUserId) {
+                alert('받는 사용자 ID를 입력해주세요.');
+                return;
+            }
+
+            try {
+                // 빠른 전송 API 호출
+                const response = await fetch(`http://localhost:8080/api/notifications/send/quick?eventType=${eventType}&targetUserId=${targetUserId}&content=${encodeURIComponent(content)}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    log(`빠른 알림 전송 성공: ${content} → 사용자 ${targetUserId}`, 'success');
+                    
+                    // 보낸 알림 카운트 증가
+                    sentCount++;
+                    updateStats();
+                    
+                } else {
+                    const error = await response.text();
+                    log(`빠른 알림 전송 실패: ${error}`, 'error');
+                }
+                
+            } catch (error) {
+                log(`빠른 알림 전송 오류: ${error.message}`, 'error');
+            }
+        }
+
+        // 알림 목록 로드
+        async function loadNotifications() {
+            if (!authToken) {
+                log('인증 토큰이 없습니다.', 'warning');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8080/api/notifications', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayNotifications(data.content);
+                    updateStats();
+                    log(`알림 ${data.content.length}개 로드됨`, 'info');
+                } else {
+                    log('알림 로드 실패', 'error');
+                }
+            } catch (error) {
+                log(`알림 로드 오류: ${error.message}`, 'error');
+            }
+        }
+
+        // 알림 표시
+        function displayNotifications(notifications) {
+            const container = document.getElementById('notificationsList');
+            container.innerHTML = '';
+
+            if (notifications.length === 0) {
+                container.innerHTML = '<p>알림이 없습니다.</p>';
+                return;
+            }
+
+            notifications.forEach(notification => {
+                addNotificationToList(notification);
+            });
+        }
+
+        // 알림을 목록에 추가
+        function addNotificationToList(notification) {
+            const container = document.getElementById('notificationsList');
+            const notificationDiv = document.createElement('div');
+            notificationDiv.className = `notification-item ${notification.read ? 'read' : ''}`;
+            notificationDiv.id = `notification-${notification.id}`;
+
+            const time = new Date(notification.createdAt).toLocaleString('ko-KR');
+            
+            notificationDiv.innerHTML = `
+                <div class="notification-type">${notification.type}</div>
+                <div class="notification-content">${notification.content}</div>
+                <div class="notification-time">${time}</div>
+                <div class="notification-actions">
+                    ${!notification.read ? `<button onclick="markAsRead(${notification.id})" class="btn-small btn-success">읽음 처리</button>` : ''}
+                    <button onclick="deleteNotification(${notification.id})" class="btn-small btn-danger">삭제</button>
+                </div>
+            `;
+
+            const existing = container.querySelector(`#notification-${notification.id}`);
+            if (existing) {
+                existing.replaceWith(notificationDiv);
+            } else {
+                container.insertBefore(notificationDiv, container.firstChild);
+            }
+        }
+
+        // 알림 읽음 처리
+        async function markAsRead(notificationId) {
+            if (!authToken) return;
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/notifications/${notificationId}/read`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    log(`알림 ${notificationId} 읽음 처리 완료`, 'success');
+                    const notificationDiv = document.getElementById(`notification-${notificationId}`);
+                    if (notificationDiv) {
+                        notificationDiv.classList.add('read');
+                        notificationDiv.querySelector('.notification-actions').innerHTML = `
+                            <button onclick="deleteNotification(${notificationId})" class="btn-small btn-danger">삭제</button>
+                        `;
+                    }
+                    loadNotifications();
+                }
+            } catch (error) {
+                log(`읽음 처리 오류: ${error.message}`, 'error');
+            }
+        }
+
+        // 모든 알림 읽음 처리
+        async function markAllAsRead() {
+            if (!authToken) return;
+
+            try {
+                const response = await fetch('http://localhost:8080/api/notifications/read-all', {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    log('모든 알림 읽음 처리 완료', 'success');
+                    loadNotifications();
+                }
+            } catch (error) {
+                log(`전체 읽음 처리 오류: ${error.message}`, 'error');
+            }
+        }
+
+        // 알림 삭제
+        async function deleteNotification(notificationId) {
+            if (!authToken) return;
+
+            if (!confirm('정말로 이 알림을 삭제하시겠습니까?')) return;
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/notifications/${notificationId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    log(`알림 ${notificationId} 삭제 완료`, 'success');
+                    const notificationDiv = document.getElementById(`notification-${notificationId}`);
+                    if (notificationDiv) {
+                        notificationDiv.remove();
+                    }
+                    updateStats();
+                }
+            } catch (error) {
+                log(`알림 삭제 오류: ${error.message}`, 'error');
+            }
+        }
+
+        // 통계 업데이트
+        function updateStats() {
+            // 실제로는 API 호출로 통계를 가져와야 함
+            // 여기서는 간단한 시뮬레이션
+            const totalElement = document.getElementById('totalNotifications');
+            const unreadElement = document.getElementById('unreadNotifications');
+            const sentElement = document.getElementById('sentNotifications');
+
+            if (totalElement && unreadElement && sentElement) {
+                // 실제 알림 개수는 loadNotifications에서 가져와야 함
+                // 여기서는 보낸 알림만 업데이트
+                sentElement.textContent = sentCount;
+            }
+        }
+
+        // 토스트 알림 표시
+        function showNotificationToast(notification) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('새로운 알림', {
+                    body: notification.content,
+                    icon: '/favicon.ico'
+                });
+            }
+        }
+
+        // 페이지 로드 시 초기화
+        window.onload = function() {
+            log('NotiFyah 고급 알림 클라이언트가 로드되었습니다.', 'info');
+            
+            if ('Notification' in window) {
+                Notification.requestPermission();
+            }
+        };
+
+        // 페이지 종료 시 WebSocket 연결 해제
+        window.onbeforeunload = function() {
+            if (ws) {
+                ws.close();
+            }
+        };
+    </script>
+</body>
+</html> 
